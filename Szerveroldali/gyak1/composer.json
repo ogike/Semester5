@@ -1,0 +1,12 @@
+{
+    "name": "ogike/gyak1",
+    "type": "project",
+    "authors": [
+        {
+            "name": "Ogike"
+        }
+    ],
+    "require": {
+        "fakerphp/faker": "^1.20"
+    }
+}
