@@ -15,6 +15,8 @@ return [
     |
     */
 
+    //.env file-ból lekéri a DB_CONNECTION ÉRTÉKET
+        //ha nem lenne, akkor def érték: 'mysql'
     'default' => env('DB_CONNECTION', 'mysql'),
 
     /*
@@ -38,6 +40,7 @@ return [
         'sqlite' => [
             'driver' => 'sqlite',
             'url' => env('DATABASE_URL'),
+            //mivel nem fog találni ilyen kuilcsot, a második fallback értékre megy
             'database' => env('DB_DATABASE', database_path('database.sqlite')),
             'prefix' => '',
             'foreign_key_constraints' => env('DB_FOREIGN_KEYS', true),
