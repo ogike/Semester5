@@ -16,7 +16,10 @@ return new class extends Migration
         Schema::create('categories', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('color', 7); //RRGGBB
+
+            $table->string('text_color', 9); //RRGGBB
+            $table->string('background_color', 9); //RRGGBB
+
             $table->timestamps();
         });
     }

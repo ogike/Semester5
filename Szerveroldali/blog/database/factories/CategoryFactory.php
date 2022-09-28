@@ -17,7 +17,9 @@ class CategoryFactory extends Factory
     public function definition()
     {
         return [
-            //
+            'name' => fake()->name(),
+            'text_color' => fake()->safeHexColor() . "ff", // '.' operator: string concatenation
+            'background_color' => fake()->safeHexColor() . "ff",
         ];
     }
 }

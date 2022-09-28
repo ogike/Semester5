@@ -15,7 +15,18 @@ return new class extends Migration
     {
         Schema::create('posts', function (Blueprint $table) {
             $table->id();
+
+            $table->string('title');
+            $table->text('text'); //text: max size of 65635 (string: 255)
+            $table->string('description')->nullable();
+
+            $table->string('cover_image_path')->nullable();
+            $table->boolean('hidden')->default(true);
+
+            $table->unsignedBigInteger('author_id')->nullable();
             $table->timestamps();
+
+            $table->foreign('author_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
 

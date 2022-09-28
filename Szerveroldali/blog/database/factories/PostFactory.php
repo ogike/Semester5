@@ -17,7 +17,9 @@ class PostFactory extends Factory
     public function definition()
     {
         return [
-            //
+            'title' => rtrim(fake()->sentence(), '.'),
+            'text' => fake()->paragraphs( rand(3, 7) , true),
+            'description' => rtrim(fake()->sentence(), '.')
         ];
     }
 }
