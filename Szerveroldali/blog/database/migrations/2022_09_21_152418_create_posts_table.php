@@ -21,7 +21,7 @@ return new class extends Migration
             $table->string('description')->nullable();
 
             $table->string('cover_image_path')->nullable();
-            $table->boolean('hidden')->default(true);
+            $table->boolean('hidden')->default(false);
 
             $table->unsignedBigInteger('author_id')->nullable();
             $table->timestamps();

@@ -16,7 +16,7 @@ class DatabaseSeeder extends Seeder
     {
         $users_count = rand(5,10);
         $users = collect();
-        for ($i=2; $i <= $users_count; $i++) {
+        for ($i=1; $i <= $users_count; $i++) {
             $users->add(
                 \App\Models\User::factory()->create([
                     'email' => 'user' . $i . '@szerveroldali.com'
@@ -24,8 +24,8 @@ class DatabaseSeeder extends Seeder
             );
             # code...
         }
-        $categories = \App\Models\Post::factory(rand(5,10))->create();
-        $posts = \App\Models\Category::factory(rand(5,10))->create();
+        $posts = \App\Models\Post::factory(rand(5,10))->create();
+        $categories = \App\Models\Category::factory(rand(5,10))->create();
 
         //beadhoz teljes értékű seeder: modellek + kapcsolatok
         //relációk:
