@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Validation\Rule;
 
 class CategoryController extends Controller
 {
@@ -36,9 +37,24 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
-        $validated = $request->validate([ //input mezőnek részei
-            'name' => 'required|min:3', //tömbként is felsorolhatjuk, vag |-el elválasztva
-            'style' => 'required'
+        $validated = $request->validate( //input mezőnek részei
+        [
+            'name' => [ //tömbként is felsorolhatjuk, vag |-el elválasztva
+                    'required',
+                    'min:3',
+            ],
+            'style' => [
+                'required',
+                // Benne van-e a valid style-ok listájában?
+                Rule::in(Category::$styles)
+            ]
+        ],
+        [
+            [
+                'required' => 'This field is required',
+                'name.required' => 'Name is required',
+                'style.in' => "Invalid style",
+            ]
         ]);
 
         //ha nem valid az adat, ide már nem jut el a vezérlés

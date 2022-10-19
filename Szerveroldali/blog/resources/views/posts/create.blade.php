@@ -10,7 +10,8 @@
     </div>
 
     {{-- TODO: action, method, enctype --}}
-    <form action="{{route('categories.store')}}" method="POST" >
+    {{-- enctype: kell ahhoz, hogy ne csak plain textet lehessen felküldeni --}}
+    <form action="{{route('posts.store')}}" method="POST" enctype="multipart/form-data" >
         @csrf {{-- garancia, hogy azt a formot kapjuk vissza, mait a laravel küldött neked
                     lényeg: ha formot kezelünk, ezt kötelező belerakni --}}
         {{-- TODO: Validation LEMARADTAM --}}
@@ -18,7 +19,13 @@
         <div class="form-group row mb-3">
             <label for="title" class="col-sm-2 col-form-label">Title*</label>
             <div class="col-sm-10">
-                <input type="text" class="form-control " id="title" name="title" value="">
+                <input type="text" class="form-control @error('description') is-invalid @enderror" id="description" name="description" value="">
+
+                @error('description')
+                    <div class="invalid-feedback">
+                        {{ $message }}
+                    </div>
+                @enderror
             </div>
         </div>
 
@@ -49,18 +56,25 @@
             <label for="categories" class="col-sm-2 col-form-label py-0">Categories</label>
             <div class="col-sm-10">
                 {{-- TODO: Read post categories from DB --}}
-                @forelse (['primary', 'secondary','danger', 'warning', 'info', 'dark'] as $category)
+                @forelse ($categories as $category)
                     <div class="form-check">
                         <input
                             type="checkbox"
                             class="form-check-input"
-                            value="{{ $category }}"
-                            id="{{ $category }}"
+                            value="{{ $category->id }}"
+                            id="category{{ $category->id }}"
                             {{-- TODO: name, checked --}}
+                            name="categories[]" {{-- tömböt küldök fel a POST mezőben (natív php) --}}
+                            @checked( {{-- állapottartás --}}
+                                in_array(
+                                    $category->id,
+                                    old('categorires', [])
+                                )
+                            )
                         >
-                        {{-- TODO --}}
+                        {{-- TODO: --}}
                         <label for="{{ $category }}" class="form-check-label">
-                            <span class="badge bg-{{ $category }}">{{ $category }}</span>
+                            <span class="badge bg-{{ $category->style }}">{{ $category->name }}</span>
                         </label>
                     </div>
                 @empty
@@ -68,6 +82,16 @@
                 @endforelse
             </div>
         </div>
+
+        {{-- {{ json_encode($errors->get('categories.*')) }} --}}
+
+        @error('categories.*')
+            <ul>
+                @foreach ( $errors->get('categories.*') as $error )
+                    <li>{{ implode(',', $error) }}</li>
+                @endforeach
+            </ul>
+        @enderror
 
         <div class="form-group row mb-3">
             <label for="cover_image" class="col-sm-2 col-form-label">Cover image</label>
@@ -84,6 +108,13 @@
                     </div>
                 </div>
             </div>
+            @error('cover_image')
+                <p class="text-danger">
+                    <small>
+                        {{ $message }}
+                    </small>
+                </p>
+            @enderror
         </div>
 
         <div class="text-center">
