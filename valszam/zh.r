@@ -10,3 +10,16 @@
 #6. feladat
 tel = exp(-1/2);
 tel
+
+
+
+boxplot(Temp ~ Month,
+        data=airquality,
+        main="Boxplotok havonta",
+        xlab="Hónap",
+        ylab="Hõmérséklet (Fahrenheit)",
+        col="orange",
+        border="brown")
+c <- (1,3,5)
+
+sd(c)
