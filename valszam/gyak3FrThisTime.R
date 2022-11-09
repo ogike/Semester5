@@ -378,3 +378,34 @@ legend(x='topleft',
        lwd = 2, 
        legend = c('elméleti', 'tapasztalati') )
 
+
+szamok <- c(4.96,  4.52,  4.13,  4.2, 4.48);
+#szamok <- c(4.53, 4.3, 4.63, 4.09, 4.81);
+szamok
+#Masodfoku egyenlet szamolo stackoverflowrol xd
+result <- function(a,b,c){
+  if(delta(a,b,c) > 0){
+    x_1 = (-b+sqrt(delta(a,b,c)))/(2*a)
+    x_2 = (-b-sqrt(delta(a,b,c)))/(2*a)
+    result = c(x_1,x_2)
+  }
+  else if(delta(a,b,c) == 0){
+    x = -b/(2*a)
+  }
+  else {"There are no real roots."}
+}
+delta<-function(a,b,c){
+  b^2-4*a*c
+}
+
+atlag <- mean(szamok)
+c <- 2*atlag - 1
+
+ElsoFeladatEredmeny <- round(max(result(1,2,-c)),2);
+ElsoFeladatEredmeny
+
+#2. feladat
+szamok2 <- c(1.189, 0.135, 0.2, 1.239)
+  
+MasodikFeladatEredmeny <- round(max(szamok2),3) 
+MasodikFeladatEredmeny
