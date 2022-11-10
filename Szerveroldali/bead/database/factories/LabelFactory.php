@@ -17,7 +17,11 @@ class LabelFactory extends Factory
     public function definition()
     {
         return [
-            //
+            // $table->string('name');
+            "name" => fake()->word(),
+            // $table->boolean('display');
+            'display' => true,
+            'color' => fake()->safeHexColor() . "ff",
         ];
     }
 }

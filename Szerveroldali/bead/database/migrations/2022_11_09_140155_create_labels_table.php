@@ -15,6 +15,9 @@ return new class extends Migration
     {
         Schema::create('labels', function (Blueprint $table) {
             $table->id();
+            $table->string('name');
+            $table->boolean('display');
+            $table->string('color', 9); //TODO: should be right
             $table->timestamps();
         });
     }

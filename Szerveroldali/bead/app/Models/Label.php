@@ -8,4 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 class Label extends Model
 {
     use HasFactory;
+
+    public function posts(){
+        return $this->belongsToMany(Item::class)->withTimestamps();
+    }
 }
