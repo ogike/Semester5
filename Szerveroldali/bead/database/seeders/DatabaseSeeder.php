@@ -36,11 +36,18 @@ class DatabaseSeeder extends Seeder
         $labels = \App\Models\Label::factory(rand(3,8))->create();
 
 
-        $items->each( function ($item) use (&$labels) {
+        $items->each( function ($item) use (&$labels, &$users) {
             $post_comments = \App\Models\Comment::factory(rand(2,9))->create();
 
-            // $item->aut
-            //TODO: connections
+            $post_comments->each( function ($comment) use (&$users){
+                $comment->author()->associate( $users->random() )->save();
+            } );
+
+            $item->comments()->saveMany( $post_comments );
+
+            $item->labels()->sync(
+                $labels->random( rand(1, $labels->count()) )
+            );
         } );
 
     }

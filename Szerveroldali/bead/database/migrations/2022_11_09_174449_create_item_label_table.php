@@ -16,12 +16,12 @@ return new class extends Migration
         Schema::create('item_label', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('item_id');
-            $table->unsignedBigInteger('post_id');
+            $table->unsignedBigInteger('label_id');
             $table->timestamps();
 
             $table->unique(['item_id', 'label_id']);
-            $table->foreign('item_id')->references('id')->on('items')->onDelete();
-            $table->foreign('label_id')->references('id')->on('labels')->onDelete();
+            $table->foreign('item_id')->references('id')->on('items')->onDelete('cascade');
+            $table->foreign('label_id')->references('id')->on('labels')->onDelete('cascade');
         });
     }
 
