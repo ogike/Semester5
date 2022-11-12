@@ -9,7 +9,7 @@ class Label extends Model
 {
     use HasFactory;
 
-    public function posts(){
+    public function items(){
         return $this->belongsToMany(Item::class)->withTimestamps();
     }
 }
