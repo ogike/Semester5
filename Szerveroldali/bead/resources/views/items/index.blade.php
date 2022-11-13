@@ -10,9 +10,12 @@
         <div class="col-12 col-md-4">
             <div class="float-lg-end">
                 {{-- TODO: links --}}
-                <a href="#" role="button" class="btn btn-sm btn-success mb-1"><i class="fas fa-plus-circle"></i> Create item</a>
 
-                <a href="{{ route('labels.create') }}" role="button" class="btn btn-sm btn-success mb-1"><i class="fas fa-plus-circle"></i> Create label</a>
+                @if (Auth::check() && Auth::user()->is_admin)
+                    <a href="#" role="button" class="btn btn-sm btn-success mb-1"><i class="fas fa-plus-circle"></i> Create item</a>
+                    <a href="{{ route('labels.create') }}" role="button" class="btn btn-sm btn-success mb-1"><i class="fas fa-plus-circle"></i> Create label</a>
+                @endif
+
 
             </div>
         </div>
@@ -35,7 +38,6 @@
                             <div class="card-body">
                                 <h5 class="card-title mb-0">{{$item->name}}</h5>
 
-                                {{-- TODO: Shorter desc --}}
                                 <p class="card-text mt-1">{!! nl2br(e(substr($item->description, 0, 100)))!!}...</p>
                             </div>
                             <div class="card-footer">

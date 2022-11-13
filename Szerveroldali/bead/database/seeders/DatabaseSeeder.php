@@ -32,7 +32,7 @@ class DatabaseSeeder extends Seeder
             ])
         );
 
-        $items = \App\Models\Item::factory(rand(5,10))->create();
+        $items = \App\Models\Item::factory(rand(8,16))->create();
         $labels = \App\Models\Label::factory(rand(3,8))->create();
 
 
