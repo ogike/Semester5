@@ -1,6 +1,5 @@
 @extends('layouts.app')
-{{-- TODO: Post title --}}
-@section('title', 'View item: ')
+@section('title', 'View item: ' . $item->name)
 
 @section('content')
 <div class="container">
@@ -9,31 +8,26 @@
 
     <div class="row justify-content-between">
         <div class="col-12 col-md-8">
-            {{-- TODO: Title --}}
-            <h1>Post title</h1>
+            <h1>{{ $item->name }}</h1>
 
             <p class="small text-secondary mb-0">
-                <i class="fas fa-user"></i>
-                {{-- TODO: Author --}}
-                <span>By Author</span>
-            </p>
-            <p class="small text-secondary mb-0">
                 <i class="far fa-calendar-alt"></i>
-                {{-- TODO: Date --}}
-                <span>01/01/2022</span>
+                <span>Obtained: {{ $item->obtained }}</span>
             </p>
 
             <div class="mb-2">
-                {{-- TODO: Read post labels from DB --}}
-                @foreach (['primary', 'secondary','danger', 'warning', 'info', 'dark'] as $label)
-                    <a href="#" class="text-decoration-none">
-                        <span class="badge bg-{{ $label }}">{{ $label }}</span>
-                    </a>
+
+                {{-- TODO: label styles fix --}}
+                @foreach ($item->labels as $label)
+                    @if ($label->display)
+                        <a href="{{ route('labels.show', $label)}}" class="text-decoration-none">
+                            <span style="background-color: {{$label->color}}">{{ $label->name }}</span>
+                        </a>
+                    @endif
                 @endforeach
             </div>
 
-            {{-- TODO: Link --}}
-            <a href="#"><i class="fas fa-long-arrow-alt-left"></i> Back to the homepage</a>
+            <a href="{{ route('items.index') }}"><i class="fas fa-long-arrow-alt-left"></i> Back to the homepage</a>
 
         </div>
 
@@ -90,9 +84,38 @@
         class="my-3"
     >
 
+    {{-- Description --}}
     <div class="mt-3">
-        {{-- TODO: Post paragraphs --}}
-         Lorem ipsum
+        {!! nl2br(e( $item->description)) !!}
+    </div>
+
+    {{-- Comments --}}
+    <div class="mt-3">
+        <h2>Comments</h2>
+
+        {{-- TODO: időrendi sorrend --}}
+        @forelse ( $item->comments->sortBy('created_at') as $comment )
+            <div class="card">
+                <p class="small text-secondary mb-0">
+                    <i class="fas fa-user"></i>
+                    <span>By {{ $comment->author ? $comment->author->name : "Unknown" }}</span>
+                </p>
+                <p class="small text-secondary mb-0">
+                    <i class="far fa-calendar-alt"></i>
+                    <span>{{ $comment->created_at }}</span>
+                </p>
+
+                <p class="card-text mt-1">{{ $comment->text }}</p>
+
+            </div>
+        @empty
+            <div class="col-12">
+                <div class="alert alert-warning" role="alert">
+                    No comments found!
+                </div>
+            </div>
+        @endforelse
+
     </div>
 </div>
 @endsection

@@ -17,9 +17,7 @@ class CommentFactory extends Factory
     public function definition()
     {
         return [
-            // $table->text('text');
             'text' => fake()->paragraph( rand(1, 3) ),
-            // $table->timestamps();
         ];
     }
 }
