@@ -409,3 +409,10 @@ szamok2 <- c(1.189, 0.135, 0.2, 1.239)
   
 MasodikFeladatEredmeny <- round(max(szamok2),3) 
 MasodikFeladatEredmeny
+
+
+n <- 16;
+szoras <- 2
+mu0 <- 6;
+u <- sqrt(n)*( 7 - mu0) / 2
+u
