@@ -104,7 +104,9 @@ class LabelController extends Controller
             return Redirect::route('labels.show', $label);
         }
 
-        return view('labels.edit', $label);
+        return view('labels.edit', [
+            'label' => $label
+        ]);
     }
 
     /**

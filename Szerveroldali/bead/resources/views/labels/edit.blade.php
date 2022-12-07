@@ -11,6 +11,7 @@
 
     {{-- TODO: action, method, enctype --}}
     <form action="{{ route('labels.update', $label) }}" method="POST" enctype="multipart/form-data">
+        @method('PUT')
         @csrf
 
         <div class="form-group row mb-3">

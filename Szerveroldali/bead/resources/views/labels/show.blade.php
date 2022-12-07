@@ -7,7 +7,7 @@
 
 
         <div class="col-12 col-md-8">
-            <h1>{{ $items->count() }} items for <span class="badge bg-primary">label {{ $label->name}}</span></h1>
+            <h1>{{ $items->total() }} items for <span class="badge bg-primary">label {{ $label->name}}</span></h1>
         </div>
         <div class="col-12 col-md-4">
             <div class="float-lg-end">
