@@ -1,0 +1,21 @@
+{
+  "scripts": {
+    "db": "npx rimraf database/database.sqlite && npx sequelize db:migrate && npx sequelize db:seed:all",
+    "dev": "npx nodemon -e js,mjs,json,gql server.js"
+  },
+  "dependencies": {
+    "@faker-js/faker": "^7.6.0",
+    "@fastify/jwt": "^6.3.3",
+    "bcrypt": "^5.1.0",
+    "fastify": "^4.10.2",
+    "graphql": "^16.6.0",
+    "mercurius": "^11.3.0",
+    "sequelize": "^6.25.3",
+    "sqlite3": "^5.1.2"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.20",
+    "rimraf": "^3.0.2",
+    "sequelize-cli": "^6.5.2"
+  }
+}
