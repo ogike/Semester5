@@ -1,0 +1,106 @@
+# TODO: Készítsd el a schema hiányzó részeit! A modellekhez kapcsolódó adatmezőket segítségül megadtuk.
+
+type Query {
+    # Elemi példa:
+    helloWorld: String
+    # Példa paraméterezésre:
+    helloName(name: String!): String
+    grade: Int
+    grades(count: Int!): [Int]
+    gradesFrom(percentages: [Float]): [Int]
+
+    students: [Student]
+    exams: [Exam]
+
+    exam(id: ID): Exam 
+
+    studentByNeptun(neptun: String!): Student
+
+    #11.
+    closestExam: Exam
+
+    #13.
+    mostBusyStudent: Student
+}
+
+type Mutation {
+    # 8.
+    createStudent(input: CreateStudentInput): Student
+
+    # 12
+    registerStudents(students: [String!]!, ExamId: ID): registerStudentsOutput
+
+    #14
+    removePassiveStudents() : 
+} 
+
+type removedPassiveStudent{
+    student: Student,
+    removedFromExams: [Exam]
+} 
+
+type registerStudentsOutput{
+    invalidNeptun: [String]
+    alreadyRegistered: [String]
+    justRegistered: [String]
+}
+
+input CreateStudentInput  {
+    neptun: String!
+    name: String!
+    birthdate: Date!
+    birthplace: String!
+    semester: Int!
+    active: Boolean!
+}
+
+interface Model {
+    id: ID!
+    createdAt: DateTime!
+    updatedAt: DateTime!
+}
+
+type Student implements Model {
+    id: ID!
+    neptun: String!
+    name: String!
+    birthdate: Date!
+    birthplace: String!
+    semester: Int!
+    active: Boolean!
+    createdAt: DateTime!
+    updatedAt: DateTime!
+
+    # 7.
+    exams: [Exam]
+}
+
+type Exam implements Model {
+    id: ID!
+    startTime: DateTime!
+    endTime: DateTime!
+    location: String!
+    maxStudents: Int!
+    createdAt: DateTime!
+    updatedAt: DateTime!
+
+    # 7.
+    tasks: [Task]
+
+    # 9.
+    studentCount: Int
+
+    # 10.
+    maxScore: Float
+    perfectScore: Float
+}
+
+type Task implements Model {
+    id: ID!
+    title: String!
+    text: String!
+    points: Float!
+    extra: Boolean!
+    createdAt: DateTime!
+    updatedAt: DateTime!
+}
