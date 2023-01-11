@@ -60,12 +60,13 @@ module.exports = {
                     startTime: {[Op.gt]: new Date()}
                 },
                 order: [
-                    ['startTime', 'ASC']
+                    ['startTime', 'ASC'] //fordított sorrend
                 ]
             })
             return exam;
         },
 
+        //13
         mostBusyStudent: async() => {
             const students = await Student.findAll();
             let result = null;
@@ -154,6 +155,27 @@ module.exports = {
             }
 
             return { invalidNeptun, alreadyRegistered, justRegistered};
+        },
+
+        //14.
+        removePassiveStudents: async(_) => {
+            const students = await Student.findAll();
+
+            const output = []; // {Student, [Exam]}
+
+            for (const student of students) {
+                if(!student.active){
+                    const removedFromExams = await student.getExams();
+
+                    for (const exam of removedFromExams) {
+                        await exam.removeStudent(student);
+                    }
+
+                    output.push({student, removedFromExams});
+                }
+            }
+
+            return output;
         }
     },
 

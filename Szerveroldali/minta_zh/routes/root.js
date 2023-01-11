@@ -4,10 +4,15 @@ const { Sequelize, sequelize, User, Playlist, Track } = require("../models");
 const { ValidationError, DatabaseError, Op } = Sequelize;
 
 module.exports = function (fastify, opts, next) {
+
+    // 3. feladat: GET /tracks (0.5 pont)
+    // Lekéri az összes zeneszámot.
     fastify.get("/tracks", async (request, reply) => {
         reply.send(await Track.findAll());
     });
 
+    //4. feladat: GET /tracks/:id (0.5 pont)
+    // Lekér egy adott zeneszámot.
     fastify.get("/tracks/:id", async (request, reply) => {
         const { id } = request.params;
         const track = await Track.findByPk(id);
@@ -18,12 +23,19 @@ module.exports = function (fastify, opts, next) {
 
         reply.send(track);
     });
+    
+    
 
+    //5. feladat: POST /tracks (1 pont)
+    // Létrehoz egy új zeneszámot.
     fastify.post("/tracks", async (request, reply) => {
         const track = await Track.create(request.body);
         reply.status(201).send(track);
     });
 
+    //6. feladat: PUT /tracks/:id (1 pont)
+    // Módosít egy meglévő zeneszámot. Csak azokat a mezőket módosítja, amiket felküldünk, 
+    // a többit változatlanul hagyja.
     fastify.put("/tracks/:id", async (request, reply) => {
         const { id } = request.params;
         const track = await Track.findByPk(id);
@@ -37,10 +49,15 @@ module.exports = function (fastify, opts, next) {
         reply.send(track);
     });
 
+    //     7. feladat: DELETE /tracks/:id (1 pont)
+    // Töröl egy meglévő zeneszámot.
+    // Minta kérés: DELETE http://localhost:4000/tracks/23
+    // Válasz megfelelő kérés esetén: 200 OK
+    // Válasz, ha a megadott id-vel nem létezik zeneszám: 404 NOT FOUND
     fastify.delete("/tracks/:id", async (request, reply) => {
         const { id } = request.params;
         const track = await Track.findByPk(id);
-
+//  
         if (!track) {
             return reply.status(404).send();
         }
@@ -50,6 +67,14 @@ module.exports = function (fastify, opts, next) {
         reply.send();
     });
 
+    //     8. feladat: POST /login (2 pont)
+    // Hitelesítés. 
+    // Nincs semmilyen jelszókezelés, csak a felhasználónevet kell felküldeni a request body-ban. 
+    // Ha a megadott felhasználónévvel létezik fiók az adatbázisban, 
+    //  azt sikeres loginnak vesszük és kiállítjuk a tokent. 
+    // A user-t bele kell rakni a token payload-jába! 
+    // A token aláírásához HS256 algoritmust használj! 
+    // A titkosító kulcs értéke "secret" legyen!
     fastify.post("/login", {
         schema: {
             // body: {
@@ -82,6 +107,11 @@ module.exports = function (fastify, opts, next) {
         reply.send({ token })
     });
 
+
+    //     9. feladat: GET /my-playlists (1 pont)
+    // Megadja a bejelentkezett felhasználóhoz tartozó lejátszási listákat. 
+    // Értelemszerűen a végpont hitelesített, hiszen ehhez tudnunk kell, 
+    //  hogy ki a bejelentkezett felhasználó.
     fastify.get("/my-playlists", { onRequest: [fastify.auth] }, async (request, reply) => {
         // await Playlist.findAll({
         //     where: {
@@ -93,6 +123,9 @@ module.exports = function (fastify, opts, next) {
         reply.send(await user.getPlaylists());
     });
 
+    
+    //     10. feladat: POST /my-playlists (1 pont)
+    // Új lejátszási lista létrehozása a bejelentkezett felhasználóhoz. A végpont hitelesített.
     fastify.post("/my-playlists", { onRequest: [fastify.auth] }, async (request, reply) => {
         // await Playlist.create({
         //     ...request.body,
@@ -103,6 +136,11 @@ module.exports = function (fastify, opts, next) {
         reply.status(201).send(await user.createPlaylist(request.body));
     });
 
+
+    //     11. feladat: POST /my-playlists/:id/add-tracks (6 pont)
+    // Zeneszám(ok) hozzárendelése a bejelentkezett felhasználó megadott lejátszási listájához 
+    // (adatbázis szintű reláció megteremtése két egyébként már létező entitás esetén). 
+    // A végpont hitelesített.
     fastify.post("/my-playlists/:id/add-tracks", {
         onRequest: [fastify.auth],
         schema: {
@@ -153,6 +191,10 @@ module.exports = function (fastify, opts, next) {
 
     });
 
+    //  12. feladat: POST /my-playlists/:id/remove-tracks (6 pont)
+    //   Zeneszám(ok) eltávolítása a bejelentkezett felhasználó megadott lejátszási listájáról 
+    //    (adatbázis szintű reláció megszüntetése). 
+    //   A végpont hitelesített.
     fastify.post("/my-playlists/:id/remove-tracks", {
         onRequest: [fastify.auth],
         schema: {
@@ -201,6 +243,13 @@ module.exports = function (fastify, opts, next) {
 
     });
 
+    // 13. feladat: GET /playlists/:id/tracks (6 pont)
+    //  Lekéri a megadott playlist-hez tartozó track-eket. 
+    //  A végpont "opcionálisan" hitelesített, hiszen ha nyilvános lejátszási listát kérünk le 
+    //   (emlékeztető: private adattag), akkor azt bárkinek (egy vendégnek is) megjeleníthetjük, 
+    //   de ha a lejátszási lista privát, akkor ellenőriznünk kell, 
+    //   hogy a tulajdonosa küldte-e a kérést, 
+    //   hiszen ő megnézheti, de egy vendég/más felhasználók nem.
     fastify.get("/playlists/:id/tracks", async (request, reply) => {
         // Ha sikerül a validáció, akkor berakja a request.user-be a payloadot,
         // egyébként nem

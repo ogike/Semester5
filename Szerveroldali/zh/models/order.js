@@ -2,6 +2,7 @@
 const {
   Model
 } = require('sequelize');
+
 module.exports = (sequelize, DataTypes) => {
   class Order extends Model {
     /**
@@ -10,8 +11,8 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      Order.belongsTo(model.User);
-      Order.belongsToMany(model.Product, {
+      Order.belongsTo(models.User);
+      Order.belongsToMany(models.Product, {
         through: "OrderProduct"
       });
     }

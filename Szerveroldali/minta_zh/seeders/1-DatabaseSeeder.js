@@ -52,7 +52,7 @@ module.exports = {
                         url: `https://szerveroldali-webprog-zenetar.com/${faker.datatype.number({
                             min: 1000,
                             max: 9999,
-                        })}-${slug(title)}`
+                        })}-${slug(title)}` //slug: hyphen-el összekapcsolás
                     })
                 );
             }

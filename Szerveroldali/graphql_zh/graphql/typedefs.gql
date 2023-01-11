@@ -1,4 +1,3 @@
-# TODO: Készítsd el a schema hiányzó részeit! A modellekhez kapcsolódó adatmezőket segítségül megadtuk.
 
 type Query {
     # Elemi példa:
@@ -30,8 +29,8 @@ type Mutation {
     # 12
     registerStudents(students: [String!]!, ExamId: ID): registerStudentsOutput
 
-    #14
-    removePassiveStudents() : 
+    # 14
+    removePassiveStudents: [removedPassiveStudent]
 } 
 
 type removedPassiveStudent{
