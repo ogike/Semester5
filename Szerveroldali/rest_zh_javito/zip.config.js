@@ -1,6 +1,6 @@
 module.exports = {
     subject: "Szerveroldali webprogramozás",
-    task: "REST API ZH",
+    task: "REST API pót/javító ZH",
     ignore: [
         ".git/**",
         ".idea/**",
