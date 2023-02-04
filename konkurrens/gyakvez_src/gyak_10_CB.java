@@ -22,7 +22,7 @@ public class CB {
                     try {
                         startVoting.await();
                     } catch (InterruptedException e) {
-                        throw new RuntimeException(e);
+                        throw new   (e);
                     } catch (BrokenBarrierException e) {
                         throw new RuntimeException(e);
                     }

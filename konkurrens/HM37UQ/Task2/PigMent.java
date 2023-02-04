@@ -2,13 +2,12 @@ package nagybead_2;
 
 import java.util.Random;
 import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.BrokenBarrierException;
-import java.util.concurrent.CyclicBarrier;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.PriorityBlockingQueue;
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class PigMent {
 
@@ -30,21 +29,15 @@ public class PigMent {
   // pigSay("Look on my works, ye Mighty, and despair!");
   
   // TODO: globally accessible variables go here (id, pigPool, openArea)
-  static final AtomicInteger currentId = new AtomicInteger(0);
-  static final ExecutorService pigPool = Executors.newCachedThreadPool();
-  static final BlockingQueue<PhotoPig> openArea = new PriorityBlockingQueue<>(
+  static AtomicInteger currentId = new AtomicInteger(0);
+  static ExecutorService pigPool = Executors.newCachedThreadPool();
+  static BlockingQueue<PhotoPig> openArea = new PriorityBlockingQueue<>(
                         MAX_POP, 
                         (a,b) -> a.mass - b.mass
   );
   
   // TODO: explicit locks and conditions also go here (Task2)
-  static final Object maxPopLock = new Object(); //TODO: write canvas comment to say this isnt used
-  
-  //Task3
-  static CyclicBarrier newDayBarrier; //barrier thats created anew every dawn
-  static final AtomicInteger alivePigCount = new AtomicInteger(INIT_POP); //number of pigs alive for the next day
-  static final Object newBarrierLock = new Object();
-  static final AtomicBoolean started = new AtomicBoolean(false);
+  static final Object maxPopLock = new Object();
 
   /* Implementing Awesomeness (a.k.a. the pigs) */
   static class PhotoPig implements Runnable {
@@ -131,52 +124,15 @@ public class PigMent {
     @Override public void run() {
       pigSay("Beware world, for I'm here now!");
        
-      if(started.get() == true){
-          //a newly instantiated pig should wait until it can be included in the cb
-          synchronized(newBarrierLock){
-              try {
-                  alivePigCount.incrementAndGet();
-                  newBarrierLock.wait();
-                  pigSay("First day on the job as not part of the INIT gang");
-              } catch (InterruptedException ex) {
-                  pigSay("Oh dear, this happened before my first day :(");
-              }
-          }
-      }
-      
       boolean living = true;
       while(living){
           try {
-              pigSay("Waiting for my mates to start the day too...");
-              if(newDayBarrier.await() == 0){
-                  replaceBarrier();
-                  synchronized(newBarrierLock){
-                    newBarrierLock.notifyAll();
-                  }
-                  synchronized(started){
-                    if(started.get() == false)
-                      started.set(true);
-                  }
-              }
-              else{
-                  synchronized(newBarrierLock){
-                    newBarrierLock.wait();
-                  }
-              }
-              pigSay("Started new day!");
-              living = aTerribleThingToDo() && eatLight();
+              living = aTerribleThingToDo();
               if(living){
-                  alivePigCount.incrementAndGet();
-              } else{
-                  //notifying the barrier that we have ended our daz before dying
-                  newDayBarrier.await(); 
+                  living = eatLight();
               }
-              
           } catch (InterruptedException ex) {
               pigSay("Look on my works, ye Mighty, and despair!");
-              break;
-          } catch (BrokenBarrierException ex) {
-              pigSay("Oh dear, this should not have happened.");
               break;
           }
       }
@@ -186,33 +142,11 @@ public class PigMent {
       return;
     }
   }
-  
-  public static void replaceBarrier(){
-      //try {
-          //ensuring this happens after all the parties of the existing cb have started,
-          // but before it's possible that a pig has finished it's day
-      //    Thread.sleep(TIC_MIN / 2);
-      //} catch (InterruptedException ex) {
-      //    System.out.println("this REALLY shouldnt have happened");
-      //}
-
-    int beforeCount = alivePigCount.get();
-    System.out.println("Replacing barrier with new count: " + beforeCount);
-    newDayBarrier = new CyclicBarrier( beforeCount );
-    alivePigCount.set(0);
-  }
 
   /* Running the simulation */
   public static void main(String[] args) throws InterruptedException {
-    newDayBarrier = new CyclicBarrier(INIT_POP);
-     
     for (int i = 0; i < INIT_POP; i++) {
         new PhotoPig(INIT_MASS);
-    }
-    
-    //starting the first day and the cycled
-    synchronized(newBarrierLock){
-        newBarrierLock.notifyAll();
     }
 
     synchronized(currentId) {
@@ -220,9 +154,8 @@ public class PigMent {
             currentId.wait();
         }
     }
-
-    pigPool.shutdownNow();
     
+    pigPool.shutdownNow();
     return;
   }
 }
